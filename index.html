@@ -36,42 +36,101 @@
     </div>
 -->
 <div class="container" ng-controller="EventForm">
-  
-  <h1>Event DataSet Generator</h1>
 
-  <p>Use this web page to create new datasets prepared to be loaded by EventFlow.<br/> To download a dataset, introduce the parameters and click on Download, then save it in a new text file.</p>
+    <div class="row">
+      <div class="span12">	
+	<h1>Event DataSet Generator</h1>
+
+	<p>Use this web page to create new datasets prepared to be
+	loaded by EventFlow.</p>
+	<p> To download a dataset, introduce the parameters and click
+	on Download, then save (File/Save As...) the result as a new text file.</p>
+
+      </div>	
+    </div>
+  
   
 {% raw %}
   
   <form class="form-horizontal" ng-submit="download()" name="myForm">
-    <div class="row">
-      <div class="span6">
-	
-	Click me: <input type="checkbox" ng-model="useNodesCount" ng-change="changeUseNodesCount()"><br/>
 
-	<div class="control-group" ng-repeat="param in params">
-	  <label class="control-label" for="{{param}}">{{allParams[param].label}}</label>
-	  <div class="controls">
-	    <input type="{{allParams[param].type}}"  min="{{allParams[param].min}}" step="{{allParams[param].step}}" id="{{param}}" name="{{param}}" 
-		   ng-model="allParams[param].value" placeholder="{{allParams[param].placeholder}}" ng-required="allParams[param].required">
-	  </div>
-	</div>
-	
-      </div>
-      <div class="span6">	
-	<div class="control-group">
-	  <label>Event Types: [ <a href="" ng-click="addEvent()">add</a> ]</label>  
-	    <div ng-repeat="event in events">
-	      <select class="input-small" ng-model="event.class" required>
-		<option>Point</option>
-		<option>Interval</option>
-	      </select>
-	      <input type="text" ng-model="event.type" required/>
-	      [ <a href="" ng-click="removeEvent(event)">X</a> ]
+
+
+    <ul class="nav nav-tabs">
+      <li class="active" ><a href="#params" data-toggle="tab">Event Parameters</a></li>
+      <li><a href="#temporal" data-toggle="tab">Temporal Parameters</a></li>
+    </ul>
+    
+    <div class="tab-content">
+      <div class="tab-pane active" id="params">
+
+	<!------------------------------------------------------------------------------------------>
+	<div class="row">
+	  <!---------------------------------------------------->
+	  <div class="span6">
+	    <div class="control-group" ng-repeat="param in params">
+	      <label class="control-label" for="{{param}}">{{allParams[param].label}}</label>
+	      <div class="controls">
+		<input type="{{allParams[param].type}}"  min="{{allParams[param].min}}" step="{{allParams[param].step}}" id="{{param}}" name="{{param}}" 
+		       ng-model="allParams[param].value" placeholder="{{allParams[param].placeholder}}" ng-required="allParams[param].required">
+	      </div>
 	    </div>
+	    <div class="control-group">
+	      <label class="control-label" for="useNodes">Count nodes</label>
+	      <div class="controls">
+		<input type="checkbox" name="useNodes" ng-model="useNodesCount" ng-change="changeUseNodesCount()"><br/>
+	      </div>
+	    </div>
+	  </div>
+	  <!---------------------------------------------------->
+	  <div class="span6">	
+	    <div class="control-group">
+	      <label>Event Types: [ <a href="" ng-click="addEvent()">add</a> ]</label>  
+	      <div ng-repeat="event in events">
+		<select class="input-small" ng-model="event.class" required>
+		  <option>Point</option>
+		  <option>Interval</option>
+		</select>
+		<input type="text" ng-model="event.type" required/>
+		[ <a href="" ng-click="removeEvent(event)">X</a> ]
+	      </div>
+	    </div>
+	  </div>
+	  <!---------------------------------------------------->
+	</div> 
+	<!------------------------------------------------------------------------------------------>
       </div>
 
+
+      <div class="tab-pane" id="temporal">
+	<!------------------------------------------------------------------------------------------>
+	<div class="row">
+	  <div class="span6">	
+	    <div class="control-group" ng-repeat="param in tempParams">
+	      <label class="control-label" for="{{param}}">{{allParams[param].label}}</label>
+	      <div class="controls">
+		<input type="{{allParams[param].type}}"  min="{{allParams[param].min}}" step="{{allParams[param].step}}" id="{{param}}" name="{{param}}" 
+		       ng-model="allParams[param].value" placeholder="{{allParams[param].placeholder}}" ng-required="allParams[param].required">
+	      </div>
+	    </div>
+	  </div>	
+	  <!---------------------------------------------------->
+	  <div class="span6 muted">		  
+	    <p>The generated events are uniformly distributed along the specified number of years</p>
+	    <p>Dates can be jittered by increasing the
+	    "{{allParams['stddev'].label}}" factor. If it is different
+	    to zero the generator will choose the dates in a random
+	    way, so every date comes from a Gaussian distribution which has a standard deviation equal to this parameter </p>
+	    <p></p>
+	  </div>	
+	</div>
+	<!------------------------------------------------------------------------------------------>
+      </div>
     </div>
+
+
+
+
     <div class="row">
       <div class="span12">	
 	 <div class="form-actions">
@@ -84,9 +143,12 @@
     
   </form>
 
-
-  <pre style="overflow-y:scroll; height: 300px;" ng-show="result" ng-model="result">{{result}}</pre>
-
+  <div class="row" ng-show="result" >
+      <button class="close" ng-click="result=null;">&times;</button>
+  </div>      
+  <div class="row" ng-show="result" >
+      <pre style="overflow-y:scroll; height: 300px;" ng-model="result">{{result}}</pre>
+  </div>
 {% endraw %}
 
   

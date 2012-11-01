@@ -19,7 +19,7 @@ function EventForm($scope, $http, $location) {
 	    step: 1,
 	    type: "number",
 	    placeholder: "Integer",
-	    value: null
+	    value: 5
 	    },
 	numberOfNodes:{
 	    label: "Number Of Nodes",
@@ -37,16 +37,7 @@ function EventForm($scope, $http, $location) {
 	    step: 1,
 	    type: "number",
 	    placeholder: "Integer",
-	    value: null
-	    },
-	stddev:{
-	    label: "Standard Deviation",
-	    required: false,
-	    min: 0,
-	    step: "any",
-	    type: "number",
-	    placeholder: "Decimal",
-	    value: null
+	    value: 5
 	    },
 	copies:{
 	    label: "Number Of Copies",
@@ -56,15 +47,34 @@ function EventForm($scope, $http, $location) {
 	    type: "number",
 	    placeholder: "Integer",
 	    value: null
+	    },
+	stddev:{
+	    label: "Dates Jitter",
+	    required: false,
+	    min: 0,
+	    step: "any",
+	    type: "number",
+	    placeholder: "Decimal",
+	    value: 0.0
+	    },
+	numberOfYears:{
+	    label: "Number of Years",
+	    required: true,
+	    min: 1,
+	    step: 1,
+	    type: "number",
+	    placeholder: "Integer",
+	    value: 2
 	    }
 	};
 
-    var params = ["numberOfRecords", "numberOfEvents", "stddev", "copies"];
-    var useNodesCount = true;   // true: Use number of Nodes
+    var params = ["numberOfRecords", "numberOfEvents", "copies"];
+    var tempParams = ["numberOfYears", "stddev"];
+    var useNodesCount = false;   // true: Use number of Nodes
 
     var prepareArgs = function() {
 	var getParams = {};
-	angular.forEach(params, function(param) {getParams[param] = allParams[param].value;});
+	angular.forEach(params.concat(tempParams), function(param) {getParams[param] = allParams[param].value;});
 	var events = [];
 	angular.forEach($scope.events, function(event) {
 			    var e = {};
@@ -78,12 +88,13 @@ function EventForm($scope, $http, $location) {
     
     $scope.allParams = allParams;
     $scope.params = params;
+    $scope.tempParams = tempParams;
     $scope.useNodesCount = useNodesCount;
     $scope.eventsDef = eventsDef;
     
     $scope.changeUseNodesCount = function() {
 	useNodesCount = ! useNodesCount;
-	params[1] = (useNodesCount) ? "numberOfEvents" : "numberOfNodes";	    
+	params[1] = (useNodesCount) ? "numberOfNodes" : "numberOfEvents";	    
     };
 
     $scope.state = /^\w\w$/;

@@ -29,6 +29,7 @@ class Download(webapp2.RequestHandler):
         patterns = self.request.get('numberOfRecords', '')
         n_nodes = self.request.get('numberOfNodes', '')
         n_events = self.request.get('numberOfEvents', '')
+        n_years = self.request.get('numberOfYears', '')
         stddev = self.request.get('stddev', 0.0)
         copies = self.request.get('copies', 1)
         events = json.loads(self.request.get('events'))
@@ -36,13 +37,14 @@ class Download(webapp2.RequestHandler):
         patterns = int(patterns) if patterns.isdigit() else None
         n_nodes = int(n_nodes) if n_nodes.isdigit() else None
         n_events = int(n_events) if n_events.isdigit() else None
+        n_years = int(n_years) if n_years.isdigit() else None
         stddev = float(stddev) if stddev.isdigit() else None
         copies = int(copies) if copies.isdigit() else None
         events = self._prepare_events(events)
         
         Args = namedtuple('DataGenArgs', 'num_of_patterns num_of_events num_of_nodes num_of_years only_points stddev copies events')
         args = Args(num_of_patterns=patterns, num_of_events=n_events, num_of_nodes=n_nodes, 
-                    num_of_years=2, only_points=False, stddev=stddev, copies=copies,
+                    num_of_years=n_years, only_points=False, stddev=stddev, copies=copies,
                     events=events)
 
         
