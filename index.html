@@ -1,18 +1,20 @@
 <!DOCTYPE HTML>
-<html>
+<html ng-app>
   <head>
     <link type="text/css" rel="stylesheet" href="/rsc/bootstrap/css/bootstrap.css" />
+    <script src="/rsc/angular-1.0.2/angular.min.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="rsc/script.js"></script>
     <style>
       body {
-      padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      padding-top: 20px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
     </style>
-
   </head> 
   <body>
 
  <body>
-
+<!--
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -28,73 +30,76 @@
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
-          </div><!--/.nav-collapse -->
+          </div>
         </div>
       </div>
     </div>
+-->
+<div class="container" ng-controller="EventForm">
+  
+  <h1>Event DataSet Generator</h1>
 
-    <div class="container">
+  <p>Use this web page to create new datasets prepared to be loaded by EventFlow.<br/> To download a dataset, introduce the parameters and click on Download, then save it in a new text file.</p>
+  
+{% raw %}
+  
+  <form class="form-horizontal" ng-submit="download()" name="myForm">
+    <div class="row">
+      <div class="span6">
+	
+	Click me: <input type="checkbox" ng-model="useNodesCount" ng-change="changeUseNodesCount()"><br/>
 
-      <h1>Event DataSet Generator</h1>
-      <p>Use this web page to create new datasets prepared to be loaded by EventFlow.<br/> To download a dataset, introduce the parameters and click on Download, then save it in a new text file.</p>
-
-
-    <form class="form-horizontal" action="/" method="post">
-      <div class="control-group">
-	<label class="control-label" for="numberOfRecords">Number of Records</label>
-	<div class="controls">
-	  <input type="number"  min="1" id="numberOfRecords" name="numberOfRecords" value="{{number_of_records}}" placeholder="Integer" required>
+	<div class="control-group" ng-repeat="param in params">
+	  <label class="control-label" for="{{param}}">{{allParams[param].label}}</label>
+	  <div class="controls">
+	    <input type="{{allParams[param].type}}"  min="{{allParams[param].min}}" step="{{allParams[param].step}}" id="{{param}}" name="{{param}}" 
+		   ng-model="allParams[param].value" placeholder="{{allParams[param].placeholder}}" ng-required="allParams[param].required">
+	  </div>
 	</div>
+	
       </div>
-      <div class="control-group">
-	<label class="control-label" for="numberOfNodes">Number of Nodes</label>
-	<div class="controls">
-	  <input type="number"  min="1"  id="numberOfNodes" name="numberOfNodes" value="{{number_of_nodes}}" placeholder="Integer" required>
-	</div>
-      </div>
-      <div class="control-group">
-	<label class="control-label" for="numberOfEvents">Number of Events</label>
-	<div class="controls">
-	  <input type="number"  min="1"  id="numberOfEvents" name="numberOfEvents" value="{{number_of_events}}" placeholder="Integer" required>
-	</div>
-      </div>
-
-      <div class="control-group">
-	<label class="control-label" for="stddev">Standard Deviation</label>
-	<div class="controls">
-	  <input type="number" step="any" min="0" id="stddev" name="stddev" value="{{stddev}}" placeholder="Decimal">
-	</div>
+      <div class="span6">	
+	<div class="control-group">
+	  <label>Event Types: [ <a href="" ng-click="addEvent()">add</a> ]</label>  
+	    <div ng-repeat="event in events">
+	      <select class="input-small" ng-model="event.class" required>
+		<option>Point</option>
+		<option>Interval</option>
+	      </select>
+	      <input type="text" ng-model="event.type" required/>
+	      [ <a href="" ng-click="removeEvent(event)">X</a> ]
+	    </div>
       </div>
 
-      <div class="control-group">
-	<label class="control-label" for="copies">Copies</label>
-	<div class="controls">
-	  <input type="number" min="1" id="copies" name="copies" value="{{copies}}" placeholder="Integer">
-	</div>
-      </div>
-
-
-      <div class="form-actions">
-	  <input type="submit" class="btn btn-primary" name="download" value="Download" />
-	  <input type="submit" class="btn" name="preview" value="Preview" />
-      </div>
-
-    </form>
-
-    {%- if result -%} 
-    <div class="well" style="overflow-y:scroll; height: 300px;">
-      {{result}}
     </div>
-    {% endif %}
-    
-    </div> <!-- /container -->
+    <div class="row">
+      <div class="span12">	
+	 <div class="form-actions">
+	   <input type="submit" class="btn btn-primary" name="download" value="Download" />
+	   <input type="button" ng-click="preview()" class="btn" name="preview" value="Preview" />
+	 </div>
+      </div>	
+    </div>
 
+    
+  </form>
+
+
+  <pre style="overflow-y:scroll; height: 300px;" ng-show="result" ng-model="result">{{result}}</pre>
+
+{% endraw %}
+
+  
+</div> <!-- /container -->
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="/rsc/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/rsc/bootstrap/js/jqBootstrapValidation.js"></script> <!-- http://reactiveraven.github.com/jqBootstrapValidation/ -->
+
+<!-- http://reactiveraven.github.com/jqBootstrapValidation/ -->
+<!--    <script src="/rsc/bootstrap/js/jqBootstrapValidation.js"></script> 
 
     <script>
       $(function () { $("input,select,textarea").not("[type=submit]").jqBootstrapValidation(); } );
     </script>
-  </body>
+-->  
+</body>
 </html>

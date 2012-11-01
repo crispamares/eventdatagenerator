@@ -12,6 +12,7 @@ import os
 from collections import namedtuple
 import datagen as dg
 import StringIO
+import json
 
 
 jinja_environment = jinja2.Environment(
@@ -23,40 +24,45 @@ class MainPage(webapp2.RequestHandler):
         template = jinja_environment.get_template('index.html')
         self.response.out.write(template.render())
 
-    def post(self):
+class Download(webapp2.RequestHandler):
+    def get(self):        
+        patterns = self.request.get('numberOfRecords', '')
+        n_nodes = self.request.get('numberOfNodes', '')
+        n_events = self.request.get('numberOfEvents', '')
+        stddev = self.request.get('stddev', 0.0)
+        copies = self.request.get('copies', 1)
+        events = json.loads(self.request.get('events'))
         
-        patterns = int(self.request.get('numberOfRecords', 10))
-        nodes = int(self.request.get('numberOfNodes', 10))
-        events = int(self.request.get('numberOfEvents', 10))
+        patterns = int(patterns) if patterns.isdigit() else None
+        n_nodes = int(n_nodes) if n_nodes.isdigit() else None
+        n_events = int(n_events) if n_events.isdigit() else None
+        stddev = float(stddev) if stddev.isdigit() else None
+        copies = int(copies) if copies.isdigit() else None
+        events = self._prepare_events(events)
         
-        Args = namedtuple('DataGenArgs', 'num_of_patterns num_of_events num_of_nodes num_of_years only_points stddev copies')
-        args = Args(num_of_patterns=patterns, num_of_events=None, num_of_nodes=nodes, 
-                    num_of_years=2, only_points=False, stddev=0.0, copies=1)
+        Args = namedtuple('DataGenArgs', 'num_of_patterns num_of_events num_of_nodes num_of_years only_points stddev copies events')
+        args = Args(num_of_patterns=patterns, num_of_events=n_events, num_of_nodes=n_nodes, 
+                    num_of_years=2, only_points=False, stddev=stddev, copies=copies,
+                    events=events)
 
         
         result = StringIO.StringIO()
         dg.run(args, result)
 
-        if self.request.get('preview') and not self.request.get('download'):
-            self.preview(result)
-        if self.request.get('download') and not self.request.get('preview'):
-            self.download(result)
-
-    def preview(self, result):
-        template_values = {
-            'result': result.getvalue().replace('\n', '<br>'),
-            'number_of_records': self.request.get('numberOfRecords'), 
-            'number_of_nodes': self.request.get('numberOfNodes'), 
-        }
-
-        template = jinja_environment.get_template('index.html')
-        self.response.out.write(template.render(template_values))
-
-    def download(self, result):
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.out.write(result.getvalue())
 
+    def _prepare_events(self, events):
+        for event in events:
+            event_class = event['class']
+            if event_class == 'Milestone':
+                event['class'] = dg.Milestone
+            elif event_class == 'Interval':
+                event['class'] = dg.Interval
+            else:
+                raise Exception('Unespected class %s' %event_class)
+        return events
 
-
-app = webapp2.WSGIApplication([('/', MainPage)],
+app = webapp2.WSGIApplication([('/', MainPage),
+                               ('/download', Download)],
                               debug=True)

@@ -85,20 +85,22 @@ class Record(object):
 
 class DataGenerator(object):    
 
-    def __init__(self, records_count, avg_events_count, nodes_count, years, only_points):
+    def __init__(self, records_count, avg_events_count, nodes_count, years, only_points, events=None):
         self.records_count = records_count
         self.avg_events_count = avg_events_count
         self.nodes_count = nodes_count
         self.years = years
         self.only_points = only_points
         
-        self.events = []
-        self.events.append({'type':'Stroke', 'class':Milestone})
-        self.events.append({'type':'Admited', 'class':Milestone})
-        self.events.append({'type':'Diagnosed', 'class':Milestone})
-        self.events.append({'type':'Drug A', 'class':Milestone if self.only_points else Interval})
-        self.events.append({'type':'Drug B', 'class':Milestone if self.only_points else Interval})
-        
+        if events is None:
+            self.events = []
+            self.events.append({'type':'Stroke', 'class':Milestone})
+            self.events.append({'type':'Admited', 'class':Milestone})
+            self.events.append({'type':'Diagnosed', 'class':Milestone})
+            self.events.append({'type':'Drug A', 'class':Milestone if self.only_points else Interval})
+            self.events.append({'type':'Drug B', 'class':Milestone if self.only_points else Interval})
+        else:
+            self.events = events
     def random_delta(self):
         items = self.avg_events_count if self.avg_events_count else self.nodes_count
         delta_inter_events = dt.timedelta(days=self.years*365) / items
@@ -171,7 +173,8 @@ def run(args, fd=sys.stdout):
                        avg_events_count=args.num_of_events,
                        nodes_count=args.num_of_nodes,
                        years=args.num_of_years,
-                       only_points=args.only_points)
+                       only_points=args.only_points,
+                       events=args.events)
     
     if args.copies:
         records = dg.run(True)
@@ -204,7 +207,10 @@ if __name__ == '__main__':
     parser.add_argument('--only_points', dest='only_points', action='store_true', default=False,
                         help='Generate dataset with only point events')
     
-    args = parser.parse_args()
+    in_args = parser.parse_args()
+    args = {'events': None}
+    args.update(args)
+
     run(args)
 
     
