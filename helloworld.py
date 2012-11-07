@@ -5,7 +5,6 @@ Created on Oct 29, 2012
 @author: crispamares
 '''
 
-import cgi
 import webapp2
 import jinja2
 import os

@@ -1,9 +1,11 @@
+var myApp = angular.module('myApp',['ui.directives']);
+
 function EventForm($scope, $http, $location) {
-    var eventsDef = [{'type':'Stroke', 'class':"Point"},
-		     {'type':'Admitted', 'class':"Point"},
-		     {'type':'Diagnosed', 'class':"Point"},
-		     {'type':'Drug A', 'class':"Interval"},
-		     {'type':'Drug B', 'class':"Interval"}
+    var eventsDef = [{'type':'Stroke', 'class':"Point", 'prop': 1},
+		     {'type':'Admitted', 'class':"Point", 'prop': 1},
+		     {'type':'Diagnosed', 'class':"Point", 'prop': 1},
+		     {'type':'Drug A', 'class':"Interval", 'prop': 1},
+		     {'type':'Drug B', 'class':"Interval", 'prop': 1}
 		    ];
     
     var serverClasses = {
@@ -22,7 +24,7 @@ function EventForm($scope, $http, $location) {
 	    value: 5
 	    },
 	numberOfNodes:{
-	    label: "Number Of Nodes",
+	    label: "Nodes per Record",
 	    required: true,
 	    min: 1,
 	    step: 1,
@@ -31,7 +33,7 @@ function EventForm($scope, $http, $location) {
 	    value: null
 	    },
 	numberOfEvents:{
-	    label: "Number Of Events",
+	    label: "Events per Record",
 	    required: true,
 	    min: 1,
 	    step: 1,
@@ -78,8 +80,9 @@ function EventForm($scope, $http, $location) {
 	var events = [];
 	angular.forEach($scope.events, function(event) {
 			    var e = {};
-			    e.type = event.type;
-			    e.class = serverClasses[event.class];
+			    e['type'] = event['type'];
+			    e['class'] = serverClasses[event['class']];
+			    e['prop'] = event['prop'];
 			    events.push(e);
 			});
 	getParams.events = JSON.stringify(events);
