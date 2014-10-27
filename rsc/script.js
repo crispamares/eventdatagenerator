@@ -21,6 +21,7 @@ function EventForm($scope, $http, $location) {
 	    step: 1,
 	    type: "number",
 	    placeholder: "Integer",
+	    help: "Introduce in this field the number of records (e.g. number of patients) that you want to generate",
 	    value: 5
 	    },
 	numberOfNodes:{
@@ -29,6 +30,8 @@ function EventForm($scope, $http, $location) {
 	    min: 1,
 	    step: 1,
 	    type: "number",
+	    help: "Introduce in this field the number of nodes per record that you want to generate. "
+		  + "Remember that one point event is represented internally with one node and an interval event as two nodes.",
 	    placeholder: "Integer",
 	    value: null
 	    },
@@ -38,6 +41,7 @@ function EventForm($scope, $http, $location) {
 	    min: 1,
 	    step: 1,
 	    type: "number",
+	    help: "Introduce in this field the number of records (e.g. number of patients) that you want to generate.",
 	    placeholder: "Integer",
 	    value: 5
 	    },
@@ -47,6 +51,7 @@ function EventForm($scope, $http, $location) {
 	    min: 1,
 	    step: 1,
 	    type: "number",
+	    help: "This contol allows you to create a particular number of copies of the generated records. You can think of it as just an easy way of creating large dataset with repeated patterns.",
 	    placeholder: "Integer",
 	    value: null
 	    },
@@ -73,6 +78,12 @@ function EventForm($scope, $http, $location) {
     var params = ["numberOfRecords", "numberOfEvents", "copies"];
     var tempParams = ["numberOfYears", "stddev"];
     var useNodesCount = false;   // true: Use number of Nodes
+    var nodesCountHelp = "Use this control if you want to toggle between counting events or counting nodes per record. "
+			 + "Usually you will want to generate datasets based on the events per record.";
+    var eventCategoriesHelp = "<dl><dt>Event Type</dt><dd>Could be point event or interval event</dd>"
+			      + "<dt>Category's name</dt><dd>Don't use the same name in two categories</dd>"
+			      + "<dt>Proportion</dt><dd>The frequency of occurrences is directly correlated with this number</dd>"
+			      + "</dl>";
 
     var prepareArgs = function() {
 	var getParams = {};
@@ -93,6 +104,8 @@ function EventForm($scope, $http, $location) {
     $scope.params = params;
     $scope.tempParams = tempParams;
     $scope.useNodesCount = useNodesCount;
+    $scope.nodesCountHelp = nodesCountHelp;
+    $scope.eventCategoriesHelp = eventCategoriesHelp;
     $scope.eventsDef = eventsDef;
     
     $scope.changeUseNodesCount = function() {
