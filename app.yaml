@@ -9,7 +9,7 @@ handlers:
   static_dir: rsc
 
 - url: /.*
-  script: helloworld.app
+  script: web.app
 
 libraries:
 - name: jinja2
