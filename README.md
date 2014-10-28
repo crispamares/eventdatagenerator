@@ -1,14 +1,14 @@
 # Event Data Generator
 
-This proyect is a simple script that generates event datasets in the
+This project is a simple script that generates event datasets in the
 EventFlow file format.
 
-It also has a simple web interface thar is prepared to run in Google
+It also has a simple web interface that is prepared to run in Google
 AppEngine.
 
 ## Script Usage
 
-The online help describes all accepted params: 
+The online help describes all accepted parameters: 
 
 ```
 $ python datagen.py  -h
@@ -73,7 +73,7 @@ and angular for the client ui code.
 
 The only requisite is the [Google App Engine SDK](https://cloud.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python)
 
-If you want to run the app in your machine type after unzipping the sdk: 
+If you want to run the app in your machine type after unzipping the SDK: 
 
 ```
 $ python dev_appserver.py eventdatagenerator/
