@@ -71,7 +71,7 @@ $ python datagen.py  -e 4 5
 The web interface is very simple. Uses webapp for the server side code
 and angular for the client ui code.
 
-The only requisite is the [Google App Engine SDK|https://cloud.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python]
+The only requisite is the [Google App Engine SDK](https://cloud.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python)
 
 If you want to run the app in your machine type after unzipping the sdk: 
 
